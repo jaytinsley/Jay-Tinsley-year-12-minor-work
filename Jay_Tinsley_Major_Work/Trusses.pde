@@ -1,5 +1,12 @@
-class joint{
-   
+class joint { 
+  int X, Y;
+  // list of the postion of beams in their array
+  IntList connections = new IntList();
+
+  joint() {
+    X = mouseX;
+    Y = mouseY;
+  }
 }
 
 
@@ -25,14 +32,14 @@ class beam {
   }
 }
 
-ArrayList <beam>  beams = new ArrayList <beam>();
+ArrayList <beam> beams = new ArrayList <beam>();
+ArrayList <joint> joints = new ArrayList <joint>();
 
 
-void trussesSetup(){
-
+void trussesSetup() {
 }
 
-void trussesDraw(){
+void trussesDraw() {
   for (int i=0; i < beams.size(); i++) {
     beams.get(i).paint();
     if (beams.get(i).updating == true) {
@@ -41,7 +48,10 @@ void trussesDraw(){
   }
 }
 
-void trussesMousePressed(){
+void trussesMousePressed() {
+  for (int i=0; i < joints.size(); i++) {
+    
+  }
   if (beams.size() != 0) {
     beams.get(beams.size()-1).updating = false;
   }
