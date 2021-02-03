@@ -9,6 +9,14 @@ class joint {
     Y = snapY(inY);
     this.label = label;
   }
+
+  void drawPointer() {
+    fill(255);
+    circle(X, Y, 10);
+    textSize(50);
+    text(label, X-15, Y-15);
+    fill(0);
+  }
 }
 
 
@@ -39,8 +47,8 @@ ArrayList <joint> joints = new ArrayList <joint>();
 
 
 void trussesSetup() {
-  joints.add(new joint(((width/4)*3), (height/4)*3,"J: " + Integer.toString(0)));
-  joints.add(new joint(width/4, (height/4)*3,"J: " + Integer.toString(1)));
+  joints.add(new joint(((width/4)*3), (height/4)*3, "J: " + Integer.toString(0)));
+  joints.add(new joint(width/4, (height/4)*3, "J: " + Integer.toString(1)));
 
   joints.get(joints.size()-2).connections.append(joints.size()-1);
   joints.get(joints.size()-1).connections.append(joints.size()-2);
@@ -74,20 +82,14 @@ void trussesDraw() {
     }
   }
   for (int i=0; i < joints.size(); i++) {
-    drawJointPointer(i);
+    //drawJointPointer(i);
+    joints.get(i).drawPointer();
   }
-  
+
   showCurrentJoint();
 }
 
-void drawJointPointer(int index) {
-  joint firstJoint = joints.get(index);
-  fill(255);
-  circle(firstJoint.X, firstJoint.Y, 10);
-  textSize(50);
-  text(firstJoint.label, firstJoint.X-15, firstJoint.Y-15);
-  fill(0);
-}
+
 void showCurrentJoint() {
   if (currentJoint != -1) {
     fill(98, 231, 27);
@@ -99,6 +101,7 @@ void showCurrentJoint() {
 boolean isMouseOnjoint(int jointArrayIndex) {
   return(snapX(mouseX) == joints.get(jointArrayIndex).X && snapX(mouseY) == joints.get(jointArrayIndex).Y);
 }
+
 //int currentJoint = -1;
 void trussesMousePressed() {  
   boolean occupied = false;
@@ -128,11 +131,4 @@ void trussesMousePressed() {
   }
   println("current Joint: " + currentJoint);
   println();
-
-
-
-  //if (beams.size() != 0) {
-  //  beams.get(beams.size()-1).updating = false;
-  //}
-  //beams.add(new beam());
 }
