@@ -60,28 +60,39 @@ void trussesDraw() {
   triangle(snapX((width/4)*3), snapY((height/4)*3), snapX((width/4)*3-50), snapY(height/4*3+50), snapX((width/4)*3+40), snapY(height/4*3+50));
   //joints.add(new joint(((width/4)*3), (height/4)*3));
 
-
-
-
   for (int i=0; i < joints.size(); i++) {
     joint firstJoint = joints.get(i);
+    fill(255);
+    circle(firstJoint.X, firstJoint.Y, 10);
+    fill(0);
     for (int k=0; k < joints.get(i).connections.size(); k++) {
       joint secondJoint = joints.get(joints.get(i).connections.get(k));
       strokeWeight(4);
       line(firstJoint.X, firstJoint.Y, secondJoint.X, secondJoint.Y);
       strokeWeight(1);
     }
+    
   }
-
+  for (int i=0; i < joints.size(); i++) {
+    joint firstJoint = joints.get(i);
+    fill(255);
+    circle(firstJoint.X, firstJoint.Y, 10);
+    fill(0);
+  }
   if (currentJoint != -1) {
+    fill(98, 231, 27);
     circle(joints.get(currentJoint).X, joints.get(currentJoint).Y, 10);
+    fill(255);
   }
+}
+boolean isMouseOnjoint(int jointArrayIndex) {
+  return(snapX(mouseX) == joints.get(jointArrayIndex).X && snapX(mouseY) == joints.get(jointArrayIndex).Y);
 }
 //int currentJoint = -1;
 void trussesMousePressed() {  
   boolean occupied = false;
   for (int i=0; i < joints.size(); i++) {
-    if (snapX(mouseX) == joints.get(i).X && snapX(mouseY) == joints.get(i).Y) {
+    if (isMouseOnjoint(i)) {
       occupied = true;
       joints.get(i).connections.append(joints.size()-1);
       joints.get(joints.size()-1).connections.append(i);
