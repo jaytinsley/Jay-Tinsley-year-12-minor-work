@@ -1,11 +1,11 @@
 class joint { 
   int X, Y;
-  // list of the postion of beams in their array
+  // list of the postion of whatever in their array
   IntList connections = new IntList();
 
-  joint() {
-    X = mouseX;
-    Y = mouseY;
+  joint(int inX, int inY) {
+    X = snapX(inX);
+    Y = snapY(inY);
   }
 }
 
@@ -37,23 +37,71 @@ ArrayList <joint> joints = new ArrayList <joint>();
 
 
 void trussesSetup() {
-}
+  joints.add(new joint(((width/4)*3), (height/4)*3));
 
+  joints.add(new joint(width/4, (height/4)*3));
+
+  joints.get(joints.size()-2).connections.append(joints.size()-1);
+  joints.get(joints.size()-1).connections.append(joints.size()-2);
+
+
+  currentJoint = joints.size()-1;
+}
+int currentJoint = -1;
 void trussesDraw() {
-  for (int i=0; i < beams.size(); i++) {
-    beams.get(i).paint();
-    if (beams.get(i).updating == true) {
-      beams.get(i).update(mouseX, mouseY);
+  //for (int i=0; i < beams.size(); i++) {
+  //  beams.get(i).paint();
+  //  if (beams.get(i).updating == true) {
+  //    beams.get(i).update(mouseX, mouseY);
+  //  }
+  //}
+  triangle(snapX(width/4), snapY((height/4)*3), snapX(width/4-50), snapY(height/4*3+50), snapX(width/4+40), snapY(height/4*3+50));
+  //joints.add(new joint(width/4, (height/4)*3));
+  triangle(snapX((width/4)*3), snapY((height/4)*3), snapX((width/4)*3-50), snapY(height/4*3+50), snapX((width/4)*3+40), snapY(height/4*3+50));
+  //joints.add(new joint(((width/4)*3), (height/4)*3));
+
+
+
+
+  for (int i=0; i < joints.size(); i++) {
+    joint firstJoint = joints.get(i);
+    for (int k=0; k < joints.get(i).connections.size(); k++) {
+      joint secondJoint = joints.get(joints.get(i).connections.get(k));
+      strokeWeight(4);
+      line(firstJoint.X, firstJoint.Y, secondJoint.X, secondJoint.Y);
+      strokeWeight(1);
     }
   }
-}
 
-void trussesMousePressed() {
+  if (currentJoint != -1) {
+    circle(joints.get(currentJoint).X, joints.get(currentJoint).Y, 10);
+  }
+}
+//int currentJoint = -1;
+void trussesMousePressed() {  
+  boolean occupied = false;
   for (int i=0; i < joints.size(); i++) {
-    
+    if (snapX(mouseX) == joints.get(i).X && snapX(mouseY) == joints.get(i).Y) {
+      occupied = true;
+      joints.get(i).connections.append(joints.size()-1);
+      joints.get(joints.size()-1).connections.append(i);
+      currentJoint = i;
+    }
   }
-  if (beams.size() != 0) {
-    beams.get(beams.size()-1).updating = false;
+  if (occupied == false) {
+    joints.add(new joint(mouseX, mouseY));
+    if (joints.size() >= 2) {
+      int newJoint = joints.size()-1;
+      joints.get(newJoint).connections.append(currentJoint);
+      joints.get(currentJoint).connections.append(newJoint);
+    }
+    currentJoint = joints.size()-1;
   }
-  beams.add(new beam());
+
+
+
+  //if (beams.size() != 0) {
+  //  beams.get(beams.size()-1).updating = false;
+  //}
+  //beams.add(new beam());
 }
