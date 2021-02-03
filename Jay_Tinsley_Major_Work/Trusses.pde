@@ -1,11 +1,13 @@
 class joint { 
   int X, Y;
+  String label;
   // list of the postion of whatever in their array
   IntList connections = new IntList();
 
-  joint(int inX, int inY) {
+  joint(int inX, int inY, String label) {
     X = snapX(inX);
     Y = snapY(inY);
+    this.label = label;
   }
 }
 
@@ -37,9 +39,8 @@ ArrayList <joint> joints = new ArrayList <joint>();
 
 
 void trussesSetup() {
-  joints.add(new joint(((width/4)*3), (height/4)*3));
-
-  joints.add(new joint(width/4, (height/4)*3));
+  joints.add(new joint(((width/4)*3), (height/4)*3,"J: " + Integer.toString(0)));
+  joints.add(new joint(width/4, (height/4)*3,"J: " + Integer.toString(1)));
 
   joints.get(joints.size()-2).connections.append(joints.size()-1);
   joints.get(joints.size()-1).connections.append(joints.size()-2);
@@ -84,7 +85,7 @@ void drawJointPointer(int index) {
   fill(255);
   circle(firstJoint.X, firstJoint.Y, 10);
   textSize(50);
-  text(index, firstJoint.X-15, firstJoint.Y-15);
+  text(firstJoint.label, firstJoint.X-15, firstJoint.Y-15);
   fill(0);
 }
 void showCurrentJoint() {
@@ -113,7 +114,7 @@ void trussesMousePressed() {
     }
   }
   if (occupied == false) {
-    joints.add(new joint(mouseX, mouseY));
+    joints.add(new joint(mouseX, mouseY, "J: " + Integer.toString(joints.size())));
     if (joints.size() >= 2) {
       int newJoint = joints.size()-1;
       joints.get(newJoint).connections.append(currentJoint);
