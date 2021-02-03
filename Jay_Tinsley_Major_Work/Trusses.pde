@@ -71,12 +71,13 @@ void trussesDraw() {
       line(firstJoint.X, firstJoint.Y, secondJoint.X, secondJoint.Y);
       strokeWeight(1);
     }
-    
   }
   for (int i=0; i < joints.size(); i++) {
     joint firstJoint = joints.get(i);
     fill(255);
     circle(firstJoint.X, firstJoint.Y, 10);
+    textSize(50);
+    text(i, firstJoint.X-15, firstJoint.Y-15);
     fill(0);
   }
   if (currentJoint != -1) {
@@ -93,9 +94,12 @@ void trussesMousePressed() {
   boolean occupied = false;
   for (int i=0; i < joints.size(); i++) {
     if (isMouseOnjoint(i)) {
+      //println("on JOInt");
       occupied = true;
-      joints.get(i).connections.append(joints.size()-1);
-      joints.get(joints.size()-1).connections.append(i);
+      joints.get(i).connections.append(currentJoint);
+
+      joints.get(currentJoint).connections.append(i);
+
       currentJoint = i;
     }
   }
@@ -108,6 +112,12 @@ void trussesMousePressed() {
     }
     currentJoint = joints.size()-1;
   }
+  
+  for (int i=0; i < joints.size(); i++) {
+    println(i +": "+joints.get(i).connections);
+  }
+  println("current Joint: " + currentJoint);
+  println();
 
 
 
