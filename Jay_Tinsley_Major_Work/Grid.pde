@@ -7,7 +7,7 @@ class points {
 }
 
 ArrayList<points> snapPoints = new ArrayList<points>();
-int scale = 50;
+int scale = 25;
 void gridSetup() {
   for (int i = 0; i < scale+1; i++) {
     for (int k = 0; k < scale+1; k++) {

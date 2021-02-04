@@ -13,42 +13,61 @@ class joint {
   void drawPointer() {
     fill(255);
     circle(X, Y, 10);
-    textSize(50);
+    textSize(25);
     text(label, X-15, Y-15);
     fill(0);
+
+    for (int i=0; i < joints.size(); i++) {
+      joint firstJoint = joints.get(i);
+      for (int k=0; k < joints.get(i).connections.size(); k++) {
+        joint secondJoint = joints.get(joints.get(i).connections.get(k));
+
+        if (joints.size() >= 2) {
+          println(firstJoint.label+" ---> " + secondJoint.label + ": " +firstJoint.getAngle(secondJoint));
+        }
+      }
+    }
+  }
+
+  float getAngle(joint otherJoint) {
+    float Xdiff = otherJoint.X - X;
+    float Ydiff = (otherJoint.Y - Y)*-1;
+    //return(atan(Ydiff, X)*180/PI);
+    //return(atan((Ydiff/Xdiff)*180/PI));
+    return(atan((Ydiff/Xdiff))*180/PI);
   }
 }
 
 
-class beam {
-  int x1, y1;
-  int x2, y2;
-  boolean updating = false;
-  beam() {
-    updating = true;
-    x1 = snapX(mouseX);
-    y1 = snapY(mouseY);
-    x2 = snapX(mouseX);
-    y2 = snapY(mouseY);
-  }
-  void update(int one, int two) {
-    x2 = snapX(one);
-    y2 = snapY(two);
-  }
-  void paint() {
-    strokeWeight(4);
-    line(x1, y1, x2, y2);
-    strokeWeight(1);
-  }
-}
+//class beam {
+//  int x1, y1;
+//  int x2, y2;
+//  boolean updating = false;
+//  beam() {
+//    updating = true;
+//    x1 = snapX(mouseX);
+//    y1 = snapY(mouseY);
+//    x2 = snapX(mouseX);
+//    y2 = snapY(mouseY);
+//  }
+//  void update(int one, int two) {
+//    x2 = snapX(one);
+//    y2 = snapY(two);
+//  }
+//  void paint() {
+//    strokeWeight(4);
+//    line(x1, y1, x2, y2);
+//    strokeWeight(1);
+//  }
+//}
 
-ArrayList <beam> beams = new ArrayList <beam>();
+//ArrayList <beam> beams = new ArrayList <beam>();
 ArrayList <joint> joints = new ArrayList <joint>();
 
 
 void trussesSetup() {
-  joints.add(new joint(((width/4)*3), (height/4)*3, "J: " + Integer.toString(0)));
-  joints.add(new joint(width/4, (height/4)*3, "J: " + Integer.toString(1)));
+  joints.add(new joint(((width/4)*3), (height/4)*3, Integer.toString(0)));
+  joints.add(new joint(width/4, (height/4)*3, Integer.toString(1)));
 
   joints.get(joints.size()-2).connections.append(joints.size()-1);
   joints.get(joints.size()-1).connections.append(joints.size()-2);
@@ -64,9 +83,9 @@ void trussesDraw() {
   //    beams.get(i).update(mouseX, mouseY);
   //  }
   //}
-  triangle(snapX(width/4), snapY((height/4)*3), snapX(width/4-50), snapY(height/4*3+50), snapX(width/4+40), snapY(height/4*3+50));
+  triangle(snapX(width/4), snapY((height/4)*3), snapX(width/4-width/scale), snapY(height/4*3+width/scale), snapX(width/4+width/scale), snapY(height/4*3+width/scale));
   //joints.add(new joint(width/4, (height/4)*3));
-  triangle(snapX((width/4)*3), snapY((height/4)*3), snapX((width/4)*3-50), snapY(height/4*3+50), snapX((width/4)*3+40), snapY(height/4*3+50));
+  triangle(snapX((width/4)*3), snapY((height/4)*3), snapX((width/4)*3-width/scale), snapY(height/4*3+width/scale), snapX((width/4)*3+width/scale), snapY(height/4*3+width/scale));
   //joints.add(new joint(((width/4)*3), (height/4)*3));
 
   for (int i=0; i < joints.size(); i++) {
@@ -86,6 +105,16 @@ void trussesDraw() {
     joints.get(i).drawPointer();
   }
 
+  //for (int i=0; i < joints.size(); i++) {
+  //  joint firstJoint = joints.get(i);
+  //  for (int k=0; k < joints.get(i).connections.size(); k++) {
+  //    joint secondJoint = joints.get(joints.get(i).connections.get(k));
+
+  //  if (joints.size() >= 2) {
+  //      println(firstJoint.label+": "+firstJoint.getAngle(secondJoint));
+  //    }
+  //  }
+  //}
   showCurrentJoint();
 }
 
@@ -117,7 +146,7 @@ void trussesMousePressed() {
     }
   }
   if (occupied == false) {
-    joints.add(new joint(mouseX, mouseY, "J: " + Integer.toString(joints.size())));
+    joints.add(new joint(mouseX, mouseY, Integer.toString(joints.size())));
     if (joints.size() >= 2) {
       int newJoint = joints.size()-1;
       joints.get(newJoint).connections.append(currentJoint);
