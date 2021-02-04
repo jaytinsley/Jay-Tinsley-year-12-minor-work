@@ -23,7 +23,11 @@ class joint {
         joint secondJoint = joints.get(joints.get(i).connections.get(k));
 
         if (joints.size() >= 2) {
-          println(firstJoint.label+" ---> " + secondJoint.label + ": " +firstJoint.getAngle(secondJoint));
+          //println(firstJoint.label+" ---> " + secondJoint.label + ": " +firstJoint.getAngle(secondJoint));
+          float angle = firstJoint.getAngle(secondJoint);
+          textSize(12.5);
+          fill(255);
+          text("--> "+secondJoint.label +": "+angle, firstJoint.X + (width/scale), firstJoint.Y - (height/scale)*(k+1));
         }
       }
     }
@@ -87,17 +91,24 @@ void showCurrentJoint() {
 boolean isMouseOnjoint(int jointArrayIndex) {
   return(snapX(mouseX) == joints.get(jointArrayIndex).X && snapX(mouseY) == joints.get(jointArrayIndex).Y);
 }
-
+boolean isConnectionAlreadyMade(joint firstJoint, joint secondJoint) {
+  for (int k=0; k < secondJoint.connections.size(); k++) {
+    if (int(firstJoint.label) == secondJoint.connections.get(k)) {
+      return(true);
+    }
+  }
+  return(false);
+}
 void trussesMousePressed() {  
   boolean occupied = false;
   for (int i=0; i < joints.size(); i++) {
     if (isMouseOnjoint(i)) {
-      //println("on JOInt");
       occupied = true;
-      joints.get(i).connections.append(currentJoint);
+      if (isConnectionAlreadyMade(joints.get(i), joints.get(currentJoint)) == false) {
+        joints.get(i).connections.append(currentJoint);
 
-      joints.get(currentJoint).connections.append(i);
-
+        joints.get(currentJoint).connections.append(i);
+      }
       currentJoint = i;
     }
   }
