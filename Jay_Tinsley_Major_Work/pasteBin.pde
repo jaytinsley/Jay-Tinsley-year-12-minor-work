@@ -1,5 +1,3 @@
-
-
 //class beam {
 //  int x1, y1;
 //  int x2, y2;
@@ -21,6 +19,8 @@
 //    strokeWeight(1);
 //  }
 //}
+
+//ArrayList <beam> beams = new ArrayList <beam>();
 
 //for (int i=0; i < beams.size(); i++) {
 //  beams.get(i).paint();
